@@ -1,0 +1,545 @@
+/* ============================================================
+   Home.css — Pritesh Sonar | Fullstack Developer Portfolio
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&display=swap');
+
+/* ── CSS Variables — Dark (default) ── */
+:root {
+  --bg: #0d0d0f;
+  --bg2: #141417;
+  --surface: #1a1a1f;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0eee8;
+  --muted: #888;
+  --accent: #7c6af7;
+  --accent2: #f25f8e;
+  --accent3: #38e8c6;
+  --glow: rgba(124, 106, 247, 0.35);
+  --card-bg: rgba(255,255,255,0.04);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme — triggered by .App.light (theme prop from App.jsx) */
+.App.light {
+  --bg: #f5f3ef;
+  --bg2: #eceae4;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --text: #0f0e12;
+  --muted: #555;
+  --accent: #5b48f0;
+  --accent2: #e03b71;
+  --accent3: #0da888;
+  --glow: rgba(91, 72, 240, 0.18);
+  --card-bg: rgba(0,0,0,0.03);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  position: relative;
+}
+
+/* ── Noise texture overlay ── */
+.App::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+
+/* =============================================
+   HERO SECTION
+   ============================================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Radial gradient spotlight */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+  pointer-events: none;
+  animation: pulseGlow 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+  50%       { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+/* ── Crazy Text (name) ── */
+.crazy-text {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--text) 30%, var(--accent) 60%, var(--accent2) 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textReveal 1s cubic-bezier(0.22, 1, 0.36, 1) both, shimmer 6s linear infinite;
+  background-size: 300% 300%;
+}
+
+@keyframes textReveal {
+  from { opacity: 0; transform: translateY(40px) skewY(3deg); }
+  to   { opacity: 1; transform: translateY(0) skewY(0deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Tagline ── */
+.hero p.fade-in {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: var(--muted);
+  margin-top: 1.25rem;
+  max-width: 480px;
+  line-height: 1.6;
+  animation: fadeUp 1s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── CTA Button ── */
+.btn {
+  display: inline-block;
+  margin-top: 2.5rem;
+  padding: 0.85rem 2.2rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  border-radius: 99px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: color var(--transition), box-shadow var(--transition);
+  animation: fadeUp 1s 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 1;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+  border-radius: 99px;
+}
+
+.btn:hover::before { transform: scaleX(1); }
+.btn:hover {
+  color: #fff;
+  box-shadow: 0 0 32px var(--glow);
+}
+
+/* ── Bounce animation ── */
+.bounce {
+  animation: fadeUp 1s 0.55s cubic-bezier(0.22, 1, 0.36, 1) both,
+             bounceFloat 3s 1.6s ease-in-out infinite;
+}
+
+@keyframes bounceFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Floating shapes ── */
+.floating-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.18;
+  filter: blur(2px);
+}
+
+.shape:nth-child(1) {
+  width: 340px; height: 340px;
+  background: var(--accent);
+  top: -80px; right: -80px;
+  animation: floatShape 8s ease-in-out infinite;
+}
+
+.shape:nth-child(2) {
+  width: 200px; height: 200px;
+  background: var(--accent2);
+  bottom: 10%; left: -60px;
+  animation: floatShape 10s 2s ease-in-out infinite reverse;
+}
+
+.shape:nth-child(3) {
+  width: 120px; height: 120px;
+  background: var(--accent3);
+  bottom: 25%; right: 10%;
+  animation: floatShape 6s 1s ease-in-out infinite;
+}
+
+@keyframes floatShape {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%       { transform: translate(20px, -20px) rotate(10deg); }
+  66%       { transform: translate(-15px, 15px) rotate(-6deg); }
+}
+
+/* =============================================
+   SHARED SECTION STYLES
+   ============================================= */
+section {
+  padding: 7rem 2rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Inner content wrapper for sections that need max-width centering */
+.about,
+.projects,
+.contact {
+  padding-left: max(2rem, calc((100vw - 1100px) / 2));
+  padding-right: max(2rem, calc((100vw - 1100px) / 2));
+}
+
+section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline accent on h2 */
+section h2::after {
+  content: '';
+  display: block;
+  margin-top: 6px;
+  height: 3px;
+  width: 50%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+/* ── slide-in (about) ── */
+.slide-in {
+  animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* ── zoom-in (projects) ── */
+.zoom-in {
+  animation: zoomIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* Fallback keyframes (for browsers without scroll timeline) */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* =============================================
+   ABOUT SECTION
+   ============================================= */
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.about p {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--muted);
+  grid-column: 2;
+  border-left: 2px solid var(--accent);
+  padding-left: 1.5rem;
+  transition: color var(--transition);
+}
+
+.about h2 {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+@media (max-width: 700px) {
+  .about {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .about p { grid-column: 1; }
+}
+
+/* =============================================
+   PROJECTS SECTION
+   ============================================= */
+.projects {
+  text-align: center;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.project-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition), color var(--transition);
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card shimmer on hover */
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(124,106,247,0.12) 100%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.project-card:hover::before { opacity: 1; }
+
+/* Top border glow */
+.project-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 99px 99px 0 0;
+}
+
+.project-card:hover::after { transform: scaleX(1); }
+
+.project-card:hover {
+  border-color: rgba(124, 106, 247, 0.4);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25), 0 0 30px var(--glow);
+  color: var(--text);
+}
+
+/* Stagger card entrance */
+.project-card:nth-child(1) { animation-delay: 0.05s; }
+.project-card:nth-child(2) { animation-delay: 0.15s; }
+.project-card:nth-child(3) { animation-delay: 0.25s; }
+
+/* =============================================
+   CONTACT SECTION
+   ============================================= */
+.contact {
+  text-align: center;
+  padding-bottom: 8rem;
+}
+
+.contact p {
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  color: var(--muted);
+}
+
+.contact a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  transition: color var(--transition);
+  padding-bottom: 2px;
+}
+
+.contact a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1.5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contact a:hover { color: var(--accent); }
+.contact a:hover::after { transform: scaleX(1); }
+
+/* =============================================
+   THEME TOGGLE BUTTON
+   ============================================= */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  width: 52px;
+  height: 28px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  transition: background var(--transition), border-color var(--transition), box-shadow 0.2s;
+  box-shadow: 0 0 0 0 var(--glow);
+}
+
+.theme-toggle:hover {
+  box-shadow: 0 0 16px var(--glow);
+  border-color: var(--accent);
+}
+
+.theme-toggle .toggle-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.App.light .theme-toggle .toggle-thumb {
+  transform: translateX(24px);
+  background: var(--accent2);
+}
+
+/* =============================================
+   SCROLL INDICATOR
+   ============================================= */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: fadeUp 1s 1.2s both;
+}
+
+.scroll-indicator span {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scroll-indicator .arrow {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollArrow 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollArrow {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+}
+
+/* =============================================
+   UTILITY — Smooth transitions on theme switch
+   ============================================= */
+.App, .App * {
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
+
+/* Override transition for animation properties to avoid conflicts */
+.crazy-text, .btn, .project-card, .floating-shapes .shape {
+  transition-property: color, border-color, box-shadow, transform, opacity;
+}

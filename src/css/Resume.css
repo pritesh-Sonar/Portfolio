@@ -1,0 +1,314 @@
+/* ============================================================
+   Resume.css — Pritesh Sonar | Fullstack Developer Portfolio
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&display=swap');
+
+/* ── Container ── */
+.resume-container {
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  padding: 8rem max(2rem, calc((100vw - 780px) / 2)) 6rem;
+  background-color: var(--bg, #0d0d0f);
+  color: var(--text, #f0eee8);
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Ambient glow top-right */
+.resume-container::before {
+  content: '';
+  position: fixed;
+  top: -100px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,106,247,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient glow bottom-left */
+.resume-container::after {
+  content: '';
+  position: fixed;
+  bottom: -80px;
+  left: -80px;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242,95,142,0.09) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Page Title ── */
+.resume-container h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 3.5rem;
+  background: linear-gradient(135deg, var(--text, #f0eee8) 30%, #7c6af7 65%, #f25f8e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 250% 250%;
+  animation: titleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
+             shimmer 7s linear infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes titleReveal {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Sections ── */
+.resume-container section {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 2rem 2rem 2.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: 16px;
+  background: var(--card-bg, rgba(255,255,255,0.04));
+  border: 1px solid var(--border, rgba(255,255,255,0.07));
+  overflow: hidden;
+  transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+
+  /* Staggered entrance */
+  opacity: 0;
+  animation: cardReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.resume-container section:nth-child(2)  { animation-delay: 0.15s; }
+.resume-container section:nth-child(3)  { animation-delay: 0.25s; }
+.resume-container section:nth-child(4)  { animation-delay: 0.35s; }
+.resume-container section:nth-child(5)  { animation-delay: 0.45s; }
+.resume-container section:nth-child(6)  { animation-delay: 0.55s; }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Left accent bar */
+.resume-container section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #7c6af7, #f25f8e);
+  border-radius: 0 2px 2px 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Top shimmer on hover */
+.resume-container section::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,106,247,0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.resume-container section:hover {
+  border-color: rgba(124,106,247,0.35);
+  transform: translateX(6px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2), -4px 0 24px rgba(124,106,247,0.1);
+}
+
+.resume-container section:hover::before { transform: scaleY(1); }
+.resume-container section:hover::after  { opacity: 1; }
+
+/* ── Section Headings ── */
+.resume-container section h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7c6af7;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Icon dot before heading */
+.resume-container section h2::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c6af7, #f25f8e);
+  flex-shrink: 0;
+}
+
+/* ── Section Content ── */
+.resume-container section p {
+  font-size: 0.97rem;
+  font-weight: 400;
+  color: var(--muted, #888);
+  line-height: 1.75;
+  transition: color 0.3s ease;
+}
+
+.resume-container section:hover p {
+  color: var(--text, #f0eee8);
+}
+
+/* ── Skills — pill tags ── */
+.resume-container section:nth-child(4) p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+/* We split the skills into individual spans via JS trick below —
+   but since the JSX uses <p> we style each word-group as a pill row */
+.skill-tag {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: rgba(124,106,247,0.12);
+  border: 1px solid rgba(124,106,247,0.25);
+  color: #a89ef9;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-tag:hover {
+  background: rgba(124,106,247,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(124,106,247,0.2);
+}
+
+/* ── Achievements — checkmark style ── */
+.resume-container section:nth-child(6) p {
+  padding-left: 1.4rem;
+  position: relative;
+}
+
+.resume-container section:nth-child(6) p::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  font-size: 0.65rem;
+  color: #7c6af7;
+  top: 0.3rem;
+}
+
+/* ── Download Button ── */
+.download-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 2.5rem;
+  padding: 0.85rem 2.2rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #f0eee8;
+  text-decoration: none;
+  border: 1.5px solid #7c6af7;
+  border-radius: 99px;
+  overflow: hidden;
+  transition: color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+  animation: cardReveal 0.7s 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.download-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #7c6af7, #f25f8e);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+  border-radius: 99px;
+}
+
+.download-btn::after {
+  content: '↓';
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.download-btn:hover {
+  color: #fff;
+  box-shadow: 0 0 36px rgba(124,106,247,0.45);
+  transform: translateY(-2px);
+}
+
+.download-btn:hover::before  { transform: scaleX(1); }
+.download-btn:hover::after   { transform: translateY(3px); }
+.download-btn:active         { transform: translateY(0) scale(0.98); }
+
+/* ── Light mode overrides ── */
+body.light .resume-container {
+  --bg: #f5f3ef;
+  --text: #0f0e12;
+  --muted: #666;
+  --border: rgba(0,0,0,0.08);
+  --card-bg: rgba(0,0,0,0.03);
+}
+
+body.light .resume-container section:hover {
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08), -4px 0 24px rgba(91,72,240,0.08);
+}
+
+body.light .resume-container section h2  { color: #5b48f0; }
+body.light .resume-container section p   { color: #888; }
+body.light .resume-container section:hover p { color: #0f0e12; }
+body.light .resume-container section:nth-child(6) p::before { color: #5b48f0; }
+body.light .resume-container section::before {
+  background: linear-gradient(180deg, #5b48f0, #e03b71);
+}
+body.light .skill-tag {
+  background: rgba(91,72,240,0.1);
+  border-color: rgba(91,72,240,0.2);
+  color: #5b48f0;
+}
+body.light .download-btn {
+  color: #0f0e12;
+  border-color: #5b48f0;
+}
+body.light .download-btn::before {
+  background: linear-gradient(135deg, #5b48f0, #e03b71);
+}
+body.light .download-btn:hover { color: #fff; }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .resume-container {
+    padding: 7rem 1.25rem 4rem;
+  }
+  .resume-container section:hover {
+    transform: translateX(3px);
+  }
+}
