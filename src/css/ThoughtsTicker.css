@@ -1,0 +1,188 @@
+/* ============================================================
+   ThoughtsTicker.css — Home page scrolling comments preview
+   ============================================================ */
+
+.ticker-section {
+  width: 100%;
+  padding: 5rem 0 2rem;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.ticker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 max(2rem, calc((100vw - 1100px) / 2));
+  margin-bottom: 1.75rem;
+}
+
+.ticker-header__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ticker-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text, #ededeb);
+  letter-spacing: -0.02em;
+}
+
+.ticker-count {
+  font-size: 0.72rem;
+  color: rgba(237,237,235,0.3);
+  font-style: italic;
+}
+
+.ticker-cta {
+  background: none;
+  border: 1px solid rgba(167,139,250,0.3);
+  color: #a78bfa;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.35rem 1rem;
+  border-radius: 99px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.ticker-cta:hover {
+  background: rgba(167,139,250,0.1);
+  box-shadow: 0 0 16px rgba(167,139,250,0.2);
+  transform: translateY(-1px);
+}
+
+/* ── Track wrap ── */
+.ticker-track-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Fade edges */
+.ticker-fade {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ticker-fade--left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg, #0a0a0c), transparent);
+}
+
+.ticker-fade--right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg, #0a0a0c), transparent);
+}
+
+/* ── Scrolling track ── */
+.ticker-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: tickerScroll 40s linear infinite;
+  padding: 4px 0 8px;
+}
+
+.ticker-track--paused { animation-play-state: paused; }
+
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); } /* -50% because items are duplicated */
+}
+
+/* ── Individual item ── */
+.ticker-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 0.9rem 1.1rem;
+  min-width: 260px;
+  max-width: 300px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.2s ease;
+}
+
+.ticker-item:hover {
+  border-color: rgba(167,139,250,0.3);
+  background: rgba(167,139,250,0.06);
+  transform: translateY(-3px);
+}
+
+.ticker-item__avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ac, #a78bfa) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ac, #a78bfa) 35%, transparent);
+  color: var(--ac, #a78bfa);
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ticker-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ticker-item__name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text, #ededeb);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticker-item__rel {
+  font-size: 0.65rem;
+  color: rgba(167,139,250,0.65);
+  font-style: italic;
+}
+
+.ticker-item__msg {
+  font-size: 0.75rem;
+  color: rgba(237,237,235,0.42);
+  line-height: 1.55;
+  margin: 2px 0 0;
+  font-style: italic;
+}
+
+/* ── Light mode ── */
+body.light .ticker-fade--left  { background: linear-gradient(to right, var(--bg, #f0eeea), transparent); }
+body.light .ticker-fade--right { background: linear-gradient(to left,  var(--bg, #f0eeea), transparent); }
+
+body.light .ticker-item {
+  background: rgba(255,255,255,0.7);
+  border-color: rgba(0,0,0,0.07);
+  backdrop-filter: blur(6px);
+}
+
+body.light .ticker-item:hover {
+  border-color: rgba(167,139,250,0.3);
+  background: rgba(255,255,255,0.9);
+}
+
+body.light .ticker-item__name { color: #111010; }
+body.light .ticker-item__msg  { color: rgba(17,16,16,0.45); }
+body.light .ticker-count       { color: rgba(17,16,16,0.35); }
+body.light .ticker-label       { color: #111010; }

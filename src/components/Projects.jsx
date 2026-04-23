@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "../css/Project.css";
-import imgPortfolio from "../assets/portfolioScreen.png";
-import imgNotesApp from "../assets/noteaAppScreenshot.png";
-import imgKrushiSevak from "../assets/KrushisevakScreen.png";
+import { getProjects } from "../apiService";
 
 const projects = [
   {
@@ -13,10 +12,11 @@ const projects = [
     description:
       "Add your project description here — what it does, the problem it solves, and what makes it special.",
     tech: ["React", "CSS", "React Router"],
-    image: imgPortfolio, 
+    image: "/portfolioScreen.png",
     github: "https://github.com/pritesh-Sonar",
-    live:"#",
-    color: "#7c6af7",
+    live: "#",
+    accent: "#a78bfa",
+    size: "large", // large card spans 2 columns
   },
   {
     id: 2,
@@ -26,9 +26,11 @@ const projects = [
     description:
       "Add your project description here — what it does, the problem it solves, and what makes it special.",
     tech: ["React", "Node.js", "MongoDB"],
-    image: imgKrushiSevak,
+    image: null,
     github: "https://github.com/pritesh-Sonar",
-    color: "#38e8c6",
+    live: "#",
+    accent: "#34d399",
+    size: "small",
   },
   {
     id: 3,
@@ -40,7 +42,9 @@ const projects = [
     tech: ["Spring Boot", "React", "AWS"],
     image: null,
     github: "https://github.com/pritesh-Sonar",
-    color: "#f25f8e",
+    live: "#",
+    accent: "#fb7185",
+    size: "small",
   },
   {
     id: 4,
@@ -50,154 +54,226 @@ const projects = [
     description:
       "Add your project description here — what it does, the problem it solves, and what makes it special.",
     tech: ["React", "Node.js", "Express"],
-    image: imgNotesApp,
-    github: "https://github.com/pritesh-Sonar/notesApp_frontend",
-    live: "https://notes-app-frontend-ylpq.vercel.app",
-    color: "#f7a94b",
+    image: null,
+    github: "https://github.com/pritesh-Sonar",
+    live: "#",
+    accent: "#fbbf24",
+    size: "small",
   },
   {
     id: 5,
     title: "CakeCraft",
-    tag: "Full Stack",
+    tag: "E-Commerce",
     year: "2024",
     description:
       "Add your project description here — what it does, the problem it solves, and what makes it special.",
     tech: ["React", "Spring Boot", "MySQL"],
     image: null,
     github: "https://github.com/pritesh-Sonar",
-    color: "#f25f8e",
+    live: "#",
+    accent: "#38bdf8",
+    size: "large",
   },
 ];
 
+function useInstantReveal(delay = 0) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    let raf1, raf2, timer;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        timer = setTimeout(() => setVisible(true), delay);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      clearTimeout(timer);
+    };
+  }, [delay]);
+
+  return visible;
+}
+
+function GitHubIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+    </svg>
+  );
+}
+
+function ExternalIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  );
+}
+
 function ProjectCard({ project, index }) {
-  const [hovered, setHovered] = useState(false);
+  const delay = 80 + index * 90; // stagger in ms
+  const visible = useInstantReveal(delay);
 
   return (
     <article
-      className="project-card"
-      style={{ "--accent-color": project.color, "--delay": `${index * 0.1}s` }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className={`pc ${project.size === "large" ? "pc--large" : "pc--small"} ${visible ? "pc--visible" : ""}`}
+      style={{ "--a": project.accent }}
     >
-      {/* Image Area */}
-      <div className="card-image">
+      {/* Noise grain overlay */}
+      <div className="pc__grain" />
+
+      {/* Top strip */}
+      <div className="pc__strip" />
+
+      {/* Image / placeholder */}
+      <div className="pc__img-wrap">
         {project.image ? (
-          <img src={project.image} alt={project.title} />
+          <img src={project.image} alt={project.title} className="pc__img" />
         ) : (
-          <div className="image-placeholder">
-            <div className="placeholder-grid">
-              {[...Array(9)].map((_, i) => (
-                <span key={i} className="grid-dot" />
+          <div className="pc__placeholder">
+            <div className="pc__dots">
+              {[...Array(12)].map((_, i) => (
+                <span key={i} className="pc__dot" style={{ "--i": i }} />
               ))}
             </div>
-            <p className="placeholder-label">Screenshot not available</p>
+            <span className="pc__placeholder-hint">
+              Image is not available 😢
+            </span>
           </div>
         )}
-        <div className="card-image-overlay" />
-
-        {/* Floating tag */}
-        <span className="project-tag">{project.tag}</span>
-        <span className="project-year">{project.year}</span>
+        {/* Gradient fade into card */}
+        <div className="pc__img-fade" />
       </div>
 
-      {/* Content */}
-      <div className="card-content">
-        <h3 className="project-title">{project.title}</h3>
-        <p className="project-desc">{project.description}</p>
+      {/* Meta row */}
+      <div className="pc__meta">
+        <span className="pc__tag">{project.tag}</span>
+        <span className="pc__year">{project.year}</span>
+      </div>
 
-        {/* Tech stack */}
-        <div className="tech-stack">
+      {/* Body */}
+      <div className="pc__body">
+        <h3 className="pc__title">{project.title}</h3>
+        <p className="pc__desc">{project.description}</p>
+
+        <div className="pc__tech">
           {project.tech.map((t) => (
-            <span key={t} className="tech-pill">
+            <span key={t} className="pc__pill">
               {t}
             </span>
           ))}
         </div>
-
-        {/* Links */}
-        <div className="card-links">
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link-btn link-github"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            GitHub
-          </a>
-          {project.live ? (
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-btn link-live"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              Live Demo
-            </a>
-          ) : (
-            <p></p>
-          )}
-        </div>
       </div>
 
-      {/* Hover border glow */}
-      <div className="card-border-glow" />
+      {/* Footer links */}
+      <div className="pc__footer">
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pc__link pc__link--gh"
+        >
+          <GitHubIcon /> GitHub
+        </a>
+        {project.live == "#" ? (
+          <p></p>
+        ) : (
+          <a
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pc__link pc__link--live"
+          >
+            Live Demo <ExternalIcon />
+          </a>
+        )}
+      </div>
+
+      {/* Corner number */}
+      <span className="pc__num">0{project.id}</span>
     </article>
   );
 }
 
 function Projects() {
+  const titleVisible = useInstantReveal(0);
+  const footerVisible = useInstantReveal(projects.length * 90 + 200);
+  const [projestList, setProjectList] = useState([]);
+
+  // Api method call
+  useEffect(() => {
+    getProjects()
+      .then((result) => {
+        if (result) {
+          setProjectList(result.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("fail to load Notes");
+      });
+  }, []);
+
   return (
-    <div className="projects-page">
-      {/* Background orbs */}
-      <div className="orb orb-1" />
-      <div className="orb orb-2" />
+    <div className="proj-page">
+      {/* Mesh background */}
+      <div className="proj-mesh" />
 
       {/* Header */}
-      <header className="projects-header">
-        <span className="projects-eyebrow">Selected Work</span>
-        <h1 className="projects-title">Projects</h1>
-        <p className="projects-subtitle">
+      <header
+        className={`proj-header ${titleVisible ? "proj-header--visible" : ""}`}
+      >
+        <div className="proj-header__kicker">
+          <span className="proj-header__line" />
+          Selected Work
+          <span className="proj-header__line" />
+        </div>
+        <h1 className="proj-header__title">
+          <span>My</span>
+          <span className="proj-header__title--accent">Projects</span>
+        </h1>
+        <p className="proj-header__sub">
           Things I've built — from ideas to shipped products.
         </p>
       </header>
 
-      {/* Grid */}
-      <div className="projects-grid">
-        {projects.map((project, index) => (
-          <ProjectCard key={project.id} project={project} index={index} />
-        ))}
-      </div>
+      {/* Bento grid */}
+      {projestList ? (
+        <div className="proj-grid">
+          {projestList.map((p, i) => (
+            <ProjectCard key={p.id} project={p} index={i} />
+          ))}
+        </div>
+      ) : (
+        <h2>Error Occured 😥</h2>
+      )}
 
-      {/* Footer CTA */}
-      <div className="projects-footer">
-        <p>Want to see more?</p>
+      {/* Footer */}
+      <div
+        className={`proj-footer ${footerVisible ? "proj-footer--visible" : ""}`}
+      >
         <a
           href="https://github.com/pritesh-Sonar"
           target="_blank"
           rel="noopener noreferrer"
-          className="github-cta"
+          className="proj-footer__cta"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-          </svg>
-          View all on GitHub
+          <GitHubIcon />
+          More on GitHub
+          <span className="proj-footer__arrow">→</span>
         </a>
       </div>
     </div>

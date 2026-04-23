@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
+import ThoughtsTicker from "./ThoughtsTiker";
+
 function Home({ theme }) {
   const navigate = useNavigate();
 
@@ -30,6 +32,8 @@ function Home({ theme }) {
           experiences. Coffee fuels my code, and I design with purpose.
         </p>
       </section>
+
+      <ThoughtsTicker />
 
       {/* Projects Section */}
       <section className="projects zoom-in" id="projects">
@@ -61,6 +65,7 @@ function Home({ theme }) {
           </div>
         </div>
       </section>
+
 
       {/* Contact Section */}
       <section className="contact fade-in">
