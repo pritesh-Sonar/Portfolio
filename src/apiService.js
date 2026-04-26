@@ -9,7 +9,8 @@ const apiService = axios.create({
 
 export const getProjects = () => apiService.get("/api/projects");
 export const getComments = () => apiService.get("/api/comment");
-export const createComment = (data) => apiService.post("/users", data);
+export const getMilestones = () => apiService.get("/api/milestones");
+export const getGoals = () => apiService.get("/api/goals");
 
 
 export default apiService;  

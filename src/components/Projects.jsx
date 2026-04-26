@@ -1,80 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/Project.css";
+import Loader from "./Loader";
 import { getProjects } from "../apiService";
+import toast from 'react-hot-toast';
 
-const projects = [
-  {
-    id: 1,
-    title: "Portfolio Website",
-    tag: "Full Stack",
-    year: "2025",
-    description:
-      "Add your project description here — what it does, the problem it solves, and what makes it special.",
-    tech: ["React", "CSS", "React Router"],
-    image: "/portfolioScreen.png",
-    github: "https://github.com/pritesh-Sonar",
-    live: "#",
-    accent: "#a78bfa",
-    size: "large", // large card spans 2 columns
-  },
-  {
-    id: 2,
-    title: "Krushi Sevak",
-    tag: "Web App",
-    year: "2025",
-    description:
-      "Add your project description here — what it does, the problem it solves, and what makes it special.",
-    tech: ["React", "Node.js", "MongoDB"],
-    image: null,
-    github: "https://github.com/pritesh-Sonar",
-    live: "#",
-    accent: "#34d399",
-    size: "small",
-  },
-  {
-    id: 3,
-    title: "Ultimate Precision",
-    tag: "Full Stack",
-    year: "2024",
-    description:
-      "Add your project description here — what it does, the problem it solves, and what makes it special.",
-    tech: ["Spring Boot", "React", "AWS"],
-    image: null,
-    github: "https://github.com/pritesh-Sonar",
-    live: "#",
-    accent: "#fb7185",
-    size: "small",
-  },
-  {
-    id: 4,
-    title: "NotesApp",
-    tag: "Productivity",
-    year: "2024",
-    description:
-      "Add your project description here — what it does, the problem it solves, and what makes it special.",
-    tech: ["React", "Node.js", "Express"],
-    image: null,
-    github: "https://github.com/pritesh-Sonar",
-    live: "#",
-    accent: "#fbbf24",
-    size: "small",
-  },
-  {
-    id: 5,
-    title: "CakeCraft",
-    tag: "E-Commerce",
-    year: "2024",
-    description:
-      "Add your project description here — what it does, the problem it solves, and what makes it special.",
-    tech: ["React", "Spring Boot", "MySQL"],
-    image: null,
-    github: "https://github.com/pritesh-Sonar",
-    live: "#",
-    accent: "#38bdf8",
-    size: "large",
-  },
-];
 
 function useInstantReveal(delay = 0) {
   const [visible, setVisible] = useState(false);
@@ -209,9 +139,11 @@ function ProjectCard({ project, index }) {
 }
 
 function Projects() {
-  const titleVisible = useInstantReveal(0);
-  const footerVisible = useInstantReveal(projects.length * 90 + 200);
+  const titleVisible = useInstantReveal(0); 
   const [projestList, setProjectList] = useState([]);
+  const [loader, setLoader] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
+  const footerVisible = useInstantReveal(projestList.length * 90 + 200);
 
   // Api method call
   useEffect(() => {
@@ -223,60 +155,92 @@ function Projects() {
       })
       .catch((err) => {
         console.log(err);
+        setFetchError(true);
         toast.error("fail to load Notes");
+      })
+      .finally(() => {
+        setLoader(false);
       });
   }, []);
 
-  return (
-    <div className="proj-page">
-      {/* Mesh background */}
-      <div className="proj-mesh" />
-
-      {/* Header */}
-      <header
-        className={`proj-header ${titleVisible ? "proj-header--visible" : ""}`}
-      >
-        <div className="proj-header__kicker">
-          <span className="proj-header__line" />
-          Selected Work
-          <span className="proj-header__line" />
+    if (fetchError) {
+    return (
+      <div className="proj-page">
+        <div className="proj-mesh" />
+        <div className="proj-error">
+          <span className="proj-error__icon">⚠</span>
+          <h2>Couldn't load projects</h2>
+          <p>Something Unusual Happened try again.</p>
+          <button
+            className="proj-error__retry"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </button>
         </div>
-        <h1 className="proj-header__title">
-          <span>My</span>
-          <span className="proj-header__title--accent">Projects</span>
-        </h1>
-        <p className="proj-header__sub">
-          Things I've built — from ideas to shipped products.
-        </p>
-      </header>
-
-      {/* Bento grid */}
-      {projestList ? (
-        <div className="proj-grid">
-          {projestList.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
-          ))}
-        </div>
-      ) : (
-        <h2>Error Occured 😥</h2>
-      )}
-
-      {/* Footer */}
-      <div
-        className={`proj-footer ${footerVisible ? "proj-footer--visible" : ""}`}
-      >
-        <a
-          href="https://github.com/pritesh-Sonar"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="proj-footer__cta"
-        >
-          <GitHubIcon />
-          More on GitHub
-          <span className="proj-footer__arrow">→</span>
-        </a>
       </div>
-    </div>
+    );
+  }
+
+
+  return (
+    <>
+      <div className="proj-page">
+        {/* Mesh background */}
+        <div className="proj-mesh" />
+
+        {/* Header */}
+        <header
+          className={`proj-header ${titleVisible ? "proj-header--visible" : ""}`}
+        >
+          <div className="proj-header__kicker">
+            <span className="proj-header__line" />
+            Selected Work
+            <span className="proj-header__line" />
+          </div>
+          <h1 className="proj-header__title">
+            <span>My</span>
+            <span className="proj-header__title--accent">Projects</span>
+          </h1>
+          <p className="proj-header__sub">
+            Things I've built — from ideas to shipped products.
+          </p>
+        </header>
+
+        {loader ? (
+          <Loader text="Loading projects…" />
+        ) : (
+          <div>
+            {/* Bento grid */}
+            {projestList ? (
+              <div className="proj-grid">
+                {projestList.map((p, i) => (
+                  <ProjectCard key={p.id} project={p} index={i} />
+                ))}
+              </div>
+            ) : (
+              <h2>Error Occured 😥</h2>
+            )}
+
+            {/* Footer */}
+            <div
+              className={`proj-footer ${footerVisible ? "proj-footer--visible" : ""}`}
+            >
+              <a
+                href="https://github.com/pritesh-Sonar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="proj-footer__cta"
+              >
+                <GitHubIcon />
+                More on GitHub
+                <span className="proj-footer__arrow">→</span>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 

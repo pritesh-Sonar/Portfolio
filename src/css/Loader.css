@@ -1,0 +1,290 @@
+/* ============================================================
+   Loader.css — Pritesh Sonar Portfolio
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap');
+
+/* ─────────────────────────────────────────
+   FULL-SCREEN OVERLAY
+───────────────────────────────────────── */
+.ldr {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  background: #0a0a0c;
+  font-family: 'Space Grotesk', sans-serif;
+  overflow: hidden;
+}
+
+/* ── Animated mesh background ── */
+.ldr__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 20% 20%, rgba(124,106,247,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 80% 80%, rgba(242,95,142,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(56,232,198,0.06) 0%, transparent 55%);
+  animation: bgBreath 6s ease-in-out infinite;
+}
+
+@keyframes bgBreath {
+  0%,100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.04); }
+}
+
+/* ─────────────────────────────────────────
+   STAGE — holds all animated pieces
+───────────────────────────────────────── */
+.ldr__stage {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─────────────────────────────────────────
+   RINGS
+───────────────────────────────────────── */
+.ldr__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+/* Outer ring — solid gradient stroke spinning */
+.ldr__ring--outer {
+  width: 140px;
+  height: 140px;
+  border-top-color: #7c6af7;
+  border-right-color: rgba(124,106,247,0.3);
+  border-bottom-color: transparent;
+  border-left-color: rgba(124,106,247,0.15);
+  animation: spinCW 1.6s cubic-bezier(0.4,0,0.2,1) infinite;
+  filter: drop-shadow(0 0 8px rgba(124,106,247,0.6));
+}
+
+/* Mid ring — dashed, counter-spinning */
+.ldr__ring--mid {
+  width: 108px;
+  height: 108px;
+  border-style: dashed;
+  border-color: rgba(242,95,142,0.35);
+  animation: spinCCW 3s linear infinite;
+}
+
+@keyframes spinCW  { to { transform: rotate(360deg); } }
+@keyframes spinCCW { to { transform: rotate(-360deg); } }
+
+/* ─────────────────────────────────────────
+   CORE — pulsing centre
+───────────────────────────────────────── */
+.ldr__core {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #a78bfa, #7c6af7 55%, #5b48f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 20px rgba(124,106,247,0.5),
+    0 0 50px rgba(124,106,247,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  animation: corePulse 2s ease-in-out infinite;
+}
+
+.ldr__core-inner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  animation: corePulse 2s ease-in-out infinite reverse;
+  box-shadow: 0 0 12px rgba(255,255,255,0.8);
+}
+
+@keyframes corePulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+
+/* ─────────────────────────────────────────
+   ORBITING DOTS
+───────────────────────────────────────── */
+.ldr__orbit {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  animation: spinCW 2.4s linear infinite;
+  /* Each dot starts at a different angle */
+  transform: rotate(calc(var(--oi) * 72deg));
+  animation-delay: calc(var(--oi) * -0.48s);
+}
+
+.ldr__orb {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f25f8e;
+  box-shadow: 0 0 10px rgba(242,95,142,0.8);
+  animation: orbScale 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--oi) * -0.48s);
+}
+
+/* Vary colours */
+.ldr__orbit:nth-child(5) .ldr__orb  { background: #38e8c6; box-shadow: 0 0 10px rgba(56,232,198,0.8); }
+.ldr__orbit:nth-child(6) .ldr__orb  { background: #fbbf24; box-shadow: 0 0 10px rgba(251,191,36,0.8); }
+.ldr__orbit:nth-child(7) .ldr__orb  { background: #7c6af7; box-shadow: 0 0 10px rgba(124,106,247,0.8); }
+.ldr__orbit:nth-child(8) .ldr__orb  { background: #f25f8e; box-shadow: 0 0 10px rgba(242,95,142,0.8); }
+.ldr__orbit:nth-child(9) .ldr__orb  { background: #38e8c6; box-shadow: 0 0 10px rgba(56,232,198,0.8); }
+
+@keyframes orbScale {
+  0%,100% { transform: translateX(-50%) scale(0.7); opacity: 0.6; }
+  50%      { transform: translateX(-50%) scale(1.2); opacity: 1; }
+}
+
+/* ─────────────────────────────────────────
+   CORNER BRACKETS
+───────────────────────────────────────── */
+.ldr__bracket {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  opacity: 0.5;
+  animation: bracketPulse 2s ease-in-out infinite;
+}
+
+.ldr__bracket--tl {
+  top: 0; left: 0;
+  border-top: 2px solid #7c6af7;
+  border-left: 2px solid #7c6af7;
+  animation-delay: 0s;
+}
+
+.ldr__bracket--tr {
+  top: 0; right: 0;
+  border-top: 2px solid #f25f8e;
+  border-right: 2px solid #f25f8e;
+  animation-delay: 0.5s;
+}
+
+.ldr__bracket--bl {
+  bottom: 0; left: 0;
+  border-bottom: 2px solid #38e8c6;
+  border-left: 2px solid #38e8c6;
+  animation-delay: 1s;
+}
+
+.ldr__bracket--br {
+  bottom: 0; right: 0;
+  border-bottom: 2px solid #fbbf24;
+  border-right: 2px solid #fbbf24;
+  animation-delay: 1.5s;
+}
+
+@keyframes bracketPulse {
+  0%,100% { opacity: 0.25; transform: scale(1); }
+  50%      { opacity: 0.8;  transform: scale(1.1); }
+}
+
+/* ─────────────────────────────────────────
+   TEXT
+───────────────────────────────────────── */
+.ldr__text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ldr__msg {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(237,237,235,0.5);
+  text-transform: uppercase;
+  margin: 0;
+  /* Fade in/out on message change */
+  animation: msgFade 0.5s ease both;
+}
+
+@keyframes msgFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Three bouncing dots */
+.ldr__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.ldr__dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #7c6af7;
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+
+.ldr__dots span:nth-child(1) { animation-delay: 0s; }
+.ldr__dots span:nth-child(2) { animation-delay: 0.2s; background: #f25f8e; }
+.ldr__dots span:nth-child(3) { animation-delay: 0.4s; background: #38e8c6; }
+
+@keyframes dotBounce {
+  0%,80%,100% { transform: translateY(0) scale(1); opacity: 0.5; }
+  40%          { transform: translateY(-8px) scale(1.2); opacity: 1; }
+}
+
+/* ─────────────────────────────────────────
+   BOTTOM PROGRESS BAR
+───────────────────────────────────────── */
+.ldr__bar-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+
+.ldr__bar {
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, #7c6af7, #f25f8e, transparent);
+  animation: barSlide 2s ease-in-out infinite;
+}
+
+@keyframes barSlide {
+  0%   { transform: translateX(-200%); }
+  100% { transform: translateX(350%); }
+}
+
+/* ─────────────────────────────────────────
+   LIGHT MODE
+───────────────────────────────────────── */
+body.light .ldr {
+  background: #f0eeea;
+}
+
+body.light .ldr__bg {
+  background:
+    radial-gradient(ellipse 55% 45% at 20% 20%, rgba(91,72,240,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 80% 80%, rgba(224,59,113,0.06) 0%, transparent 60%);
+}
+
+body.light .ldr__msg { color: rgba(17,16,16,0.4); }
+body.light .ldr__bar-wrap { background: rgba(0,0,0,0.06); }
