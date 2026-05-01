@@ -167,6 +167,7 @@ function Journey() {
       })
       .catch((error) => {
         console.log(error);
+        setFetchError(true);
       });
   }, []);
 
@@ -229,7 +230,7 @@ function Journey() {
           </div>
 
           {/* Milestones */}
-          {milestones.map((m, i) => (
+          {milestones && milestones.map((m, i) => (
             <MilestoneCard key={m.id} milestone={m} index={i} />
           ))}
         </div>
@@ -245,11 +246,29 @@ function Journey() {
           </p>
         </div>
 
+        {fetchError ? (
+        <div className="proj-page">
+          <div className="proj-mesh" />
+          <div className="proj-error">
+            <span className="proj-error__icon">⚠</span>
+            <h2>Couldn't Load the content</h2>
+            <p>Something Unusual Happened try again.</p>
+            <button
+              className="proj-error__retry"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      ) :(
+
         <div className="journey__future-grid">
           {futureGoals.map((g, i) => (
             <FutureCard key={g.title} goal={g} index={i} />
           ))}
         </div>
+      )}
 
         {/* End marker */}
         <div className="journey__end">

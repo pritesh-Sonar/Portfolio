@@ -143,7 +143,7 @@ function Projects() {
   const [projestList, setProjectList] = useState([]);
   const [loader, setLoader] = useState(true);
   const [fetchError, setFetchError] = useState(false);
-  const footerVisible = useInstantReveal(projestList.length * 90 + 200);
+ const footerVisible = useInstantReveal(((projestList?.length || 0) * 90) + 200);
 
   // Api method call
   useEffect(() => {
