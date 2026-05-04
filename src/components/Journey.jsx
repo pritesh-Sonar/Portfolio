@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { getMilestones } from "../apiService";
 import { getGoals } from "../apiService";
 import "../css/Journey.css";
+import Loader from "./Loader";
 
 /* ── Reveal hook — double rAF, reliable on every route visit ── */
 function useReveal(delay = 0) {
@@ -37,7 +38,6 @@ function useReveal(delay = 0) {
 
   return [ref, visible];
 }
-
 
 /* ── Milestone Card ── */
 function MilestoneCard({ milestone, index }) {
@@ -148,6 +148,7 @@ function Journey() {
   const [milestones, setMilestones] = useState([]);
   const [futureGoals, setGoals] = useState([]);
   const [fetchError, setFetchError] = useState(false);
+  const [loder, setLoader] = useState(true);
 
   useEffect(() => {
     getMilestones()
@@ -157,6 +158,9 @@ function Journey() {
       .catch((error) => {
         console.log(error);
         setFetchError(true);
+      })
+      .finally(() => {
+        setLoader(false);
       });
   }, []);
 
@@ -168,6 +172,9 @@ function Journey() {
       .catch((error) => {
         console.log(error);
         setFetchError(true);
+      })
+      .finally(() => {
+        setLoader(false);
       });
   }, []);
 
@@ -204,6 +211,12 @@ function Journey() {
         </div>
       </header>
 
+      {loder && (
+        <div>
+          <Loader />
+        </div>
+      )}
+
       {/* ── Timeline ── */}
 
       {fetchError ? (
@@ -230,9 +243,10 @@ function Journey() {
           </div>
 
           {/* Milestones */}
-          {milestones && milestones.map((m, i) => (
-            <MilestoneCard key={m.id} milestone={m} index={i} />
-          ))}
+          {milestones &&
+            milestones.map((m, i) => (
+              <MilestoneCard key={m.id} milestone={m} index={i} />
+            ))}
         </div>
       )}
 
@@ -247,28 +261,27 @@ function Journey() {
         </div>
 
         {fetchError ? (
-        <div className="proj-page">
-          <div className="proj-mesh" />
-          <div className="proj-error">
-            <span className="proj-error__icon">⚠</span>
-            <h2>Couldn't Load the content</h2>
-            <p>Something Unusual Happened try again.</p>
-            <button
-              className="proj-error__retry"
-              onClick={() => window.location.reload()}
-            >
-              Retry
-            </button>
+          <div className="proj-page">
+            <div className="proj-mesh" />
+            <div className="proj-error">
+              <span className="proj-error__icon">⚠</span>
+              <h2>Couldn't Load the content</h2>
+              <p>Something Unusual Happened try again.</p>
+              <button
+                className="proj-error__retry"
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </button>
+            </div>
           </div>
-        </div>
-      ) :(
-
-        <div className="journey__future-grid">
-          {futureGoals.map((g, i) => (
-            <FutureCard key={g.title} goal={g} index={i} />
-          ))}
-        </div>
-      )}
+        ) : (
+          <div className="journey__future-grid">
+            {futureGoals.map((g, i) => (
+              <FutureCard key={g.title} goal={g} index={i} />
+            ))}
+          </div>
+        )}
 
         {/* End marker */}
         <div className="journey__end">
