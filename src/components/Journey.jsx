@@ -172,9 +172,6 @@ function Journey() {
       .catch((error) => {
         console.log(error);
         setFetchError(true);
-      })
-      .finally(() => {
-        setLoader(false);
       });
   }, []);
 
